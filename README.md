@@ -1,4 +1,4 @@
-# 📰 Extractor de Noticias INE (NewsStract)
+# 📰 Extractor de Noticias INE
 
 Esta aplicación descarga noticias de agencias (como Europa Press y EFE), selecciona las más importantes para el **Instituto Nacional de Estadística (INE)** mediante Inteligencia Artificial, y genera resúmenes en formato **PDF** y **RTF** listos para usar.
 

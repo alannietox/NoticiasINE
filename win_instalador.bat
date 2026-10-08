@@ -1,60 +1,62 @@
 @echo off
-title Instalador de Python y Dependencias
+setlocal
+title Instalador - NoticiasINE
 echo =======================================================
-echo   Instalador de Entorno para Extractor de Noticias INE
+echo   Instalador de NoticiasINE
 echo =======================================================
 echo.
 
-:: Comprobar si Python esta instalado
 python --version >nul 2>&1
-IF %ERRORLEVEL% NEQ 0 (
-    echo [!] Python no se encuentra instalado en el sistema o no esta en el PATH.
-    echo Intentando instalar Python usando winget...
+if errorlevel 1 (
+    echo [ERROR] Python 3 no esta instalado o no esta en PATH.
+    echo Intentando instalar Python 3.12 mediante winget...
     winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
-    
+    if errorlevel 1 (
+        echo [ERROR] No se pudo instalar Python automaticamente.
+        pause
+        exit /b 1
+    )
     echo.
-    echo ==============================================================================
-    echo IMPORTANTE: Si Python se acaba de instalar, debes CERRAR esta ventana 
-    echo y VOLVER A EJECUTAR el archivo win_instalador.bat para continuar 
-    echo con la instalacion de las librerias.
-    echo ==============================================================================
+    echo Cierra esta ventana y vuelve a ejecutar win_instalador.bat.
     pause
-    exit /b
-) ELSE (
-    echo [OK] Python esta instalado correctamente.
-    python --version
+    exit /b 0
 )
 
+echo [OK] Python encontrado:
+python --version
 echo.
-echo [1/5] Creando entorno virtual (venv)...
+
+echo [1/4] Creando entorno virtual...
 python -m venv venv
+if errorlevel 1 goto :error
 
-echo.
-echo [2/5] Activando entorno virtual...
-call venv\Scripts\activate
-
-echo.
-echo [3/5] Actualizando gestor de paquetes (pip)...
+echo [2/4] Instalando dependencias...
+call venv\Scripts\activate.bat
 python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+if errorlevel 1 goto :error
 
-echo.
-echo [4/5] Instalando librerias necesarias...
-pip install openai fpdf2 customtkinter
+echo [3/4] Creando lanzador...
+(
+echo @echo off
+echo call venv\Scripts\activate.bat
+echo python app.py
+) > iniciar.bat
 
-echo.
-echo [5/5] Creando archivo de arranque rapido (iniciar.bat)...
-echo @echo off > iniciar.bat
-echo call venv\Scripts\activate >> iniciar.bat
-echo python app.py >> iniciar.bat
-echo exit >> iniciar.bat
+echo [4/4] Verificando instalacion...
+python -m compileall -q app.py
+if errorlevel 1 goto :error
 
 echo.
 echo =======================================================
-echo   ¡Instalacion completada con exito!
-echo   Se ha creado un entorno virtual en la carpeta 'venv'.
-echo   
-echo   Para abrir tu aplicacion facilmente, usa el nuevo 
-echo   archivo 'iniciar.bat' que se ha generado.
+echo   Instalacion completada correctamente.
+echo   Ejecuta iniciar.bat para abrir NoticiasINE.
 echo =======================================================
 pause
+exit /b 0
 
+:error
+echo.
+echo [ERROR] La instalacion no se pudo completar.
+pause
+exit /b 1

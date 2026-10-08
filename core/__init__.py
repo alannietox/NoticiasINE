@@ -1,0 +1,1 @@
+"""Core de NoticiasINE."""

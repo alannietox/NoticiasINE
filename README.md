@@ -1,23 +1,164 @@
-# 📰 Extractor de Noticias INE
+# NoticiasINE
 
-Esta aplicación descarga noticias de agencias (como Europa Press y EFE), selecciona las más importantes para el **Instituto Nacional de Estadística (INE)** mediante Inteligencia Artificial, y genera resúmenes en formato **PDF** y **RTF** listos para usar.
+**Extractor y clasificador inteligente de noticias para el Instituto Nacional de Estadística (INE).**
 
-⚡ **Impacto del proyecto:** Automatización del flujo de trabajo, reduciendo el tiempo de procesamiento manual en un **99.7%** (pasando de 3 horas a tan solo 30 segundos).
+NoticiasINE automatiza la recopilación, filtrado y selección de teletipos relevantes para el INE. El sistema combina reglas de filtrado con modelos de IA y genera un boletín final en **PDF y RTF**, preparado para su revisión y uso.
 
----
+## Características
 
-## 🚀 Cómo Instalar el Programa
-No necesitas saber de programación ni configurar nada difícil. El programa incluye instaladores automáticos que preparan todo por ti.
+- Descarga de noticias desde fuentes FTP configuradas.
+- Filtrado previo mediante reglas y palabras clave.
+- Clasificación y selección mediante IA.
+- Compatible con modelos disponibles a través de OpenRouter.
+- Interfaz gráfica de escritorio desarrollada con CustomTkinter.
+- Generación automática de boletines en PDF y RTF.
+- Modo automático mediante FTP y modo manual mediante carpeta local.
+- Reintentos ante errores de API y control de errores.
+- Instaladores para Windows y Linux.
+- Configuración local persistente sin necesidad de modificar el código.
 
-### 💻 Si usas Windows (Recomendado)
-1. Busca el archivo llamado `win_instalador.bat` en esta carpeta.
-2. Haz **doble clic** sobre él para ejecutarlo.
-3. Se abrirá una ventana negra que preparará todo de forma automática.
-   > **Nota:** Si no tienes Python instalado en tu ordenador, el instalador intentará instalarlo por ti de forma automática. Si esto ocurre, cuando termine, cierra la ventana negra y vuelve a hacer **doble clic** en `win_instalador.bat` para finalizar el proceso.
-4. Cuando termine, verás un mensaje de "¡Instalación completada con éxito!". Ya puedes cerrar la ventana.
+## Flujo de trabajo
 
-### 🐧 Si usas Linux
-1. Abre la terminal en la carpeta del programa.
-2. Escribe y ejecuta el siguiente comando para dar permisos al instalador:
-   ```bash
-   chmod +x linux_instalador.sh
+```text
+Fuentes de noticias
+       │
+       ▼
+Descarga FTP / carpeta local
+       │
+       ▼
+Limpieza y normalización
+       │
+       ▼
+Filtros deterministas
+       │
+       ▼
+Clasificación mediante IA
+       │
+       ▼
+Selección / revisión
+       │
+       ▼
+Generación del boletín
+    ┌──┴──┐
+    ▼     ▼
+   PDF   RTF
+```
+
+## Requisitos
+
+- Python 3.12+
+- Windows o Linux
+- Una API key de OpenRouter para el análisis mediante IA
+- Acceso a las fuentes FTP si se utiliza el modo automático
+
+## Instalación
+
+### Windows
+
+Ejecuta:
+
+```text
+win_instalador.bat
+```
+
+El instalador crea un entorno virtual e instala las dependencias desde `requirements.txt`.
+
+Después, inicia la aplicación con:
+
+```text
+iniciar.bat
+```
+
+### Linux
+
+Ejecuta:
+
+```bash
+chmod +x linux_instalador.sh
+./linux_instalador.sh
+```
+
+Después:
+
+```bash
+./iniciar.sh
+```
+
+### Instalación manual
+
+```bash
+python -m venv venv
+```
+
+Windows:
+
+```bat
+venv\Scripts\activate
+```
+
+Linux:
+
+```bash
+source venv/bin/activate
+```
+
+Instala las dependencias:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+## Configuración
+
+Crea un archivo `.env` a partir de `.env.example`:
+
+```env
+OPENROUTER_API_KEY=tu_clave
+```
+
+Las credenciales FTP se configuran también mediante variables de entorno.
+
+**No guardes claves API, contraseñas FTP ni archivos de configuración local en Git.**
+
+## Estructura
+
+```text
+NoticiasINE/
+├── app.py
+├── requirements.txt
+├── .env.example
+├── .gitignore
+├── NewsExtractAI.spec
+├── win_instalador.bat
+├── linux_instalador.sh
+├── iniciar.bat
+├── CONTRIBUTING.md
+└── .github/
+    └── workflows/
+        └── ci.yml
+```
+
+## Calidad y CI
+
+El repositorio incluye GitHub Actions para comprobar automáticamente la sintaxis de Python en cada push y pull request.
+
+También puedes ejecutar la comprobación localmente:
+
+```bash
+python -m compileall -q app.py
+```
+
+## Rendimiento
+
+En el entorno para el que fue desarrollado, el flujo automatizado redujo un proceso manual de aproximadamente **3 horas a unos 30 segundos**, según las mediciones del proyecto. El resultado depende del volumen de noticias y de los servicios externos utilizados.
+
+## Seguridad
+
+- Las claves se obtienen mediante variables de entorno o configuración local.
+- Los archivos de configuración local están excluidos de Git.
+- Las credenciales FTP no deben introducirse directamente en el código.
+- Las llamadas a servicios de IA incluyen control de errores y reintentos.
+
+## Licencia
+
+Actualmente no se ha definido una licencia de código abierto para el proyecto. Si quieres permitir reutilización por terceros, añade una licencia explícita.

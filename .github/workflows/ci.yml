@@ -18,5 +18,15 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
       - name: Validate Python syntax
-        run: python -m compileall -q app.py
+        run: python -m compileall -q app.py ui.py core
+
+      - name: Validate repository structure
+        run: |
+          test -f app.py
+          test -f ui.py
+          test -f core/engine.py
+          test -f core/__init__.py
